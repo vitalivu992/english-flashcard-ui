@@ -1,9 +1,10 @@
-import { Flashcard, CardDetail } from './';
-
+import { Layout, Flashcard, CardDetail, WelcomePage } from './';
 export default {
+  component: Layout,
   path: '',
   childRoutes: [
-    { path: 'flashcard', component: Flashcard, isIndex: true },
-    { path: 'card', component: CardDetail }
+    { path: 'flashcard', component: Flashcard },
+    { path: 'card', component: CardDetail },
+    { path: 'welcome', component: WelcomePage, isIndex: true }
   ],
 };

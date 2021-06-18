@@ -29,10 +29,6 @@ export function reducer(state, action) {
     if (mean.gram) {
       gram = mean.gram;
     }
-    console.log('word all meanings', meanings)
-    console.log('word meaning', meaning)
-    console.log('word example', example)
-    console.log('word gram', gram)
   }
 
   switch (action.type) {

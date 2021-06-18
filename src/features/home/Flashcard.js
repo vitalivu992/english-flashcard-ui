@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Button, Card, Label, Header, Icon } from 'semantic-ui-react'
+import { Button, Card, Label, Header, Icon, Progress } from 'semantic-ui-react'
 import queryString from 'query-string';
 
 export class Flashcard extends Component {
@@ -12,7 +12,6 @@ export class Flashcard extends Component {
     actions: PropTypes.object.isRequired,
   };
 
-
   componentDidMount() {
     const { fetchCard } = this.props.actions;
     let params = queryString.parse(this.props.location.search);
@@ -20,44 +19,59 @@ export class Flashcard extends Component {
     fetchCard(day, days);
   }
 
+  nextCard() {
+    const { fetchCard } = this.props.actions;
+    const { cardFlipped } = this.props.home;
+
+    if (!cardFlipped)
+      this.props.home.consecutiveNext += 1;
+    else
+      this.props.home.consecutiveNext = 0;
+    fetchCard();
+  }
+
   render() {
-    const { flashCard, cardFlipped, selectedExample, selectedMeaning, meaningGram } = this.props.home;
-    const { fetchCard, flipCard, nextExample, nextMeaning } = this.props.actions;
+    const { flashCard, cardFlipped, selectedExample, selectedMeaning, meaningGram, consecutiveNext } = this.props.home;
+    const { flipCard, nextExample, nextMeaning } = this.props.actions;
     return (
       <div className='home-flashcard'>
         <Card fluid>
           <Card.Content>
 
-            <Card.Header textAlign='center'>
-              <Label color='green' >#{flashCard.id}</Label>
-              <Header as='h1'>{flashCard.word}</Header>
+            <Card.Header >
+              <Label size='tiny' float='left' color='green' >#{flashCard.id}</Label>
+              <Header as='h1' textAlign='center'>{flashCard.word}</Header>
+              <Label size='small' color='blue' ribbon='right' as='a' href='/words'>Day {flashCard.day}</Label>
             </Card.Header>
             <Card.Meta textAlign='center'>
-              {meaningGram && <Label color='grey' size='tiny'>{meaningGram}</Label>}
-              <Label size='large'>{flashCard.pronounce}</Label>
               {flashCard.type && <Label color='grey' size='tiny'>{flashCard.type}</Label>}
+              <Label size='large'>{flashCard.pronounce}</Label>
             </Card.Meta>
             <Card.Description textAlign='center'>
-              {cardFlipped ?
-                (<div><b>{selectedMeaning && selectedMeaning}</b>
-                  <br />
-                  <i>{selectedExample && selectedExample}</i>
-                  <br />
-                  <Button.Group size='tiny'>
-                    <Button icon labelPosition='left' onClick={(event, data) => nextMeaning()}><Icon name='align justify' />Meaning</Button>
-                    <Button icon labelPosition='left' onClick={(event, data) => nextExample()}><Icon name='align left' />Example</Button>
-                  </Button.Group>
-                </div>) :
-                (<Label>not flipped yet</Label>)
+              {cardFlipped ? (<div>
+                {meaningGram && <Label color='grey' size='tiny'>{meaningGram}</Label>}
+                <b>{selectedMeaning && selectedMeaning}</b>
+                <br />
+                <i>{selectedExample && selectedExample}</i>
+                <br />
+                <Button.Group size='mini'>
+                  <Button color='grey' onClick={(event, data) => nextMeaning()}>Meaning</Button>
+                  <Button.Or />
+                  <Button onClick={(event, data) => nextExample()}>Example</Button>
+                </Button.Group>
+              </div>) : (
+                  <Button icon labelPosition='left' color='red' onClick={(event, data) => flipCard()}><Icon name='flipboard' />Show</Button>)
               }
 
             </Card.Description>
           </Card.Content>
           <Card.Content extra textAlign='center'>
-            <Button icon labelPosition='left' color='blue' href={'/words/' + flashCard.id}><Icon name='credit card outline' /> Detail</Button>
-            <Button icon labelPosition='left' color='red' onClick={(event, data) => flipCard()}><Icon name='redo' />Flip</Button>
-            <Button icon labelPosition='right' color='green' onClick={(event, data) => fetchCard()}>Next<Icon name='right arrow' /></Button>
-            <Label floating>Day {flashCard.day}</Label>
+            <Button icon labelPosition='left' href={'/words/' + flashCard.id}><Icon name='credit card outline' /> Detail</Button>
+            {cardFlipped ? (<Button icon labelPosition='left' color='green' onClick={(event, data) => flipCard()}><Icon name='flipboard' />Hide</Button>) : ('')}
+            <Button icon labelPosition='right' color='blue' onClick={(event, data) => this.nextCard()}>Next<Icon name='right arrow' /></Button>
+          </Card.Content>
+          <Card.Content>
+            <Progress value={consecutiveNext} total={flashCard.limit} progress='percent' precision='1' active size='small' autoSuccess />
           </Card.Content>
         </Card>
       </div>

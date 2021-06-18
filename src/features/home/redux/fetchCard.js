@@ -7,6 +7,9 @@ import {
   HOME_FETCH_CARD_FAILURE,
   HOME_FETCH_CARD_DISMISS_ERROR,
   HOME_NEXT_MEANING,
+  USER_HASH,
+  USER_SESSION_LENGTH,
+  USER_SINCE
 } from './constants';
 
 export function fetchCard(day, days, args = {}) {
@@ -14,9 +17,13 @@ export function fetchCard(day, days, args = {}) {
     dispatch({
       type: HOME_FETCH_CARD_BEGIN,
     });
+    const userHash = sessionStorage.getItem(USER_HASH);
+    const days = sessionStorage.getItem(USER_SESSION_LENGTH);
+    const day_ = Math.round((Date.now()- parseInt(sessionStorage.getItem(USER_SINCE)))/86400000);
     const promise = new Promise((resolve, reject) => {
       const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v2/flashcard?limit=1'
-        + (day ? '&day=' + day : '')
+        + ('&offset=' + userHash)
+        + '&day=' + (day ? + day : day_)
         + (days ? '&days=' + days : ''))
       doRequest.then(
         (res) => {
