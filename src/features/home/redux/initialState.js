@@ -10,6 +10,15 @@ const initialState = {
   userSessionLength_: null,
   userAlias_: null,
   consecutiveNext: 0,
+
+  word: {},
+  cardId: 0,
+  cardForDay: 0,
+  cardForLength: 0,
+  fetchWordByIdPending: false,
+  fetchWordByIdError: null,
+  fetchWordsPending: false,
+  fetchWordsError: null
 };
 
 export default initialState;

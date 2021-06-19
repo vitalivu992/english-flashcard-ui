@@ -37,11 +37,10 @@ export class Flashcard extends Component {
       <div className='home-flashcard'>
         <Card fluid>
           <Card.Content>
-
             <Card.Header >
               <Label size='tiny' float='left' color='green' >#{flashCard.id}</Label>
               <Header as='h1' textAlign='center'>{flashCard.word}</Header>
-              <Label size='small' color='blue' ribbon='right' as='a' href='/words'>Day {flashCard.day}</Label>
+              <Label size='small' color='blue' ribbon='right' as='a' href={'/cards?day='+flashCard.day+'&length='+flashCard.days}>Day {flashCard.day}/{flashCard.days}</Label>
             </Card.Header>
             <Card.Meta textAlign='center'>
               {flashCard.type && <Label color='grey' size='tiny'>{flashCard.type}</Label>}
@@ -66,7 +65,7 @@ export class Flashcard extends Component {
             </Card.Description>
           </Card.Content>
           <Card.Content extra textAlign='center'>
-            <Button icon labelPosition='left' href={'/words/' + flashCard.id}><Icon name='credit card outline' /> Detail</Button>
+            <Button icon labelPosition='left' href={'/cards?id=' + flashCard.id}><Icon name='credit card outline' /> Detail</Button>
             {cardFlipped ? (<Button icon labelPosition='left' color='green' onClick={(event, data) => flipCard()}><Icon name='flipboard' />Hide</Button>) : ('')}
             <Button icon labelPosition='right' color='blue' onClick={(event, data) => this.nextCard()}>Next<Icon name='right arrow' /></Button>
           </Card.Content>

@@ -17,13 +17,15 @@ export function fetchCard(day, days, args = {}) {
     dispatch({
       type: HOME_FETCH_CARD_BEGIN,
     });
-    const userHash = sessionStorage.getItem(USER_HASH);
-    const days = sessionStorage.getItem(USER_SESSION_LENGTH);
-    const day_ = Math.round((Date.now()- parseInt(sessionStorage.getItem(USER_SINCE)))/86400000);
+    let userHash = sessionStorage.getItem(USER_HASH);
+    let days_ = sessionStorage.getItem(USER_SESSION_LENGTH);
+    let days = days_ ? parseInt(days_) : 60;
+    let since = sessionStorage.getItem(USER_SINCE)
+    let day = Math.round((Date.now() - parseInt(since ? since : 0)) / 86400000) % days;
     const promise = new Promise((resolve, reject) => {
       const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v2/flashcard?limit=1'
-        + ('&offset=' + userHash)
-        + '&day=' + (day ? + day : day_)
+        + '&offset=' + (userHash ? userHash : 0)
+        + '&day=' + day
         + (days ? '&days=' + days : ''))
       doRequest.then(
         (res) => {

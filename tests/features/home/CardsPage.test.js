@@ -1,15 +1,15 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { CardDetail } from '../../../src/features/home/CardDetail';
+import { CardsPage } from '../../../src/features/home/CardDetail';
 
-describe('home/CardDetail', () => {
+describe('home/CardsPage', () => {
   it('renders node with correct class name', () => {
     const props = {
       home: {},
       actions: {},
     };
     const renderedComponent = shallow(
-      <CardDetail {...props} />
+      <CardsPage {...props} />
     );
 
     expect(
