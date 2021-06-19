@@ -1,4 +1,5 @@
-import { useEffect, useCallback } from 'react';
+import axios from 'axios';
+import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
   HOME_FETCH_WORDS_BEGIN,
@@ -7,19 +8,23 @@ import {
   HOME_FETCH_WORDS_DISMISS_ERROR,
 } from './constants';
 
-export function fetchWords(args = {}) {
+export function fetchWords(day, days, offset, limit=100, args = {}) {
   return (dispatch) => { // optionally you can have getState as the second argument
     dispatch({
       type: HOME_FETCH_WORDS_BEGIN,
     });
 
     const promise = new Promise((resolve, reject) => {
-      const doRequest = args.error ? Promise.reject(new Error()) : Promise.resolve();
+      const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v1/words?src=flashcard'
+        + (day ? '&day=' + day : '')
+        + (days ? '&days=' + days : '')
+        + (offset ? '&offset=' + offset : '')
+        + (limit ? '&limit=' + limit : ''));
       doRequest.then(
         (res) => {
           dispatch({
             type: HOME_FETCH_WORDS_SUCCESS,
-            data: res,
+            data: res.data,
           });
           resolve(res);
         },
@@ -85,6 +90,7 @@ export function reducer(state, action) {
       // The request is success
       return {
         ...state,
+        words: action.data.data,
         fetchWordsPending: false,
         fetchWordsError: null,
       };

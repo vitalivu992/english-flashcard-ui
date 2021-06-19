@@ -11,7 +11,8 @@ const initialState = {
   userAlias_: null,
   consecutiveNext: 0,
 
-  word: {},
+  word: null,
+  words: [],
   cardId: 0,
   cardForDay: 0,
   cardForLength: 0,

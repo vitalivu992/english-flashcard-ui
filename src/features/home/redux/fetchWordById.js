@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
   HOME_FETCH_WORD_BY_ID_BEGIN,
