@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { Segment, Button, Card, Label, Header, Icon } from 'semantic-ui-react'
 import queryString from 'query-string';
-import { USER_SESSION_LENGTH } from './redux/constants';
 
 export class CardsPage extends Component {
   static propTypes = {
@@ -16,14 +15,14 @@ export class CardsPage extends Component {
 
   componentDidMount() {
     if (this.props.location.search) {
-      const { fetchWordById, fetchWords } = this.props.actions;
+      const { fetchWordById, fetchWords, fetchWord } = this.props.actions;
       let params = queryString.parse(this.props.location.search);
-      let { day, id } = params;
+      let { day, id, word } = params;
       if (id) {
-        this.props.home.words = [];
         fetchWordById(id);
+      } else if (word) {
+        fetchWord(word)
       } if (day) {
-        this.props.home.word = null;
         fetchWords(day);
       }
     }
@@ -37,7 +36,7 @@ export class CardsPage extends Component {
         {word !== null ? (<Card fluid>
           <Card.Content>
             <Card.Header >
-              <Label size='small' float='left' ><Icon name='info circle' /> Info</Label>
+              <Button size='small' icon labelPosition='left' onClick={(event, data) => window.history.back()}>Back<Icon name='left arrow' /></Button>
               <Header as='h1' textAlign='center'>{word.word}</Header>
             </Card.Header>
             <Card.Meta textAlign='center'>
@@ -45,25 +44,22 @@ export class CardsPage extends Component {
               <Label size='large'>{word.pronounce && word.pronounce}</Label>
             </Card.Meta>
             <Card.Description>
-              {word.meanings && word.meanings.map((mean, idx) => (<div>
+              {word.meanings && word.meanings.map((mean, idx) => (<Segment key={'word-mean-' + idx}>
                 <Label circular>{idx + 1}</Label>
                 {mean.gram && <Label color='grey' size='small'>{mean.gram}</Label>}
                 <b> {mean.mean && mean.mean}</b>
                 {mean.example && <ul>
-                  {mean.example.map(example => (<li><i>{example && example}</i></li>))}
+                  {mean.example.map((example, idx_ex) => (<li key={'word-example-' + idx_ex}><i>{example && example}</i></li>))}
                 </ul>}
-              </div>))}
+              </Segment>))}
             </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <Button icon labelPosition='left' onClick={(event, data) => window.history.back()}>Back<Icon name='left arrow' /></Button>
           </Card.Content>
         </Card>) : words.length > 0 ? (<Card.Group>
           {words.map((word, idx) => (<Card key={'card-' + idx}>
             <Card.Content>
               <Card.Header >
                 <Label size='mini' color='red' circular title='Remove' onClick={(event, data) => removeWord(word.word)} as='a' />
-                <Label size='mini' color='green' circular title={'View more on ' + word.word} as='a' />
+                <Label size='mini' color='green' circular title={'View more on ' + word.word} href={'/cards?word=' + word.word} as='a' />
                 <Header as='h2' textAlign='center'>{word.word}</Header>
               </Card.Header>
               <Card.Meta textAlign='center'>

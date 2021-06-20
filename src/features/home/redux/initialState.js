@@ -19,7 +19,9 @@ const initialState = {
   fetchWordByIdPending: false,
   fetchWordByIdError: null,
   fetchWordsPending: false,
-  fetchWordsError: null
+  fetchWordsError: null,
+  fetchWordPending: false,
+  fetchWordError: null
 };
 
 export default initialState;

@@ -2,24 +2,26 @@ import axios from 'axios';
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import {
-  HOME_FETCH_WORD_BY_ID_BEGIN,
-  HOME_FETCH_WORD_BY_ID_SUCCESS,
-  HOME_FETCH_WORD_BY_ID_FAILURE,
-  HOME_FETCH_WORD_BY_ID_DISMISS_ERROR,
+  HOME_FETCH_WORD_BEGIN,
+  HOME_FETCH_WORD_SUCCESS,
+  HOME_FETCH_WORD_FAILURE,
+  HOME_FETCH_WORD_DISMISS_ERROR,
 } from './constants';
 
-export function fetchWordById(cardId, args = {}) {
+export function fetchWord(word, args = {}) {
   return (dispatch) => { // optionally you can have getState as the second argument
     dispatch({
-      type: HOME_FETCH_WORD_BY_ID_BEGIN,
+      type: HOME_FETCH_WORD_BEGIN,
     });
-
+    if (word) { } else {
+      return Promise.reject();
+    }
     const promise = new Promise((resolve, reject) => {
-      const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v1/words/' + cardId)
+      const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v1/words?src=flashcard&word=' + word);
       doRequest.then(
         (res) => {
           dispatch({
-            type: HOME_FETCH_WORD_BY_ID_SUCCESS,
+            type: HOME_FETCH_WORD_SUCCESS,
             data: res.data,
           });
           resolve(res);
@@ -27,7 +29,7 @@ export function fetchWordById(cardId, args = {}) {
         // Use rejectHandler as the second argument so that render errors won't be caught.
         (err) => {
           dispatch({
-            type: HOME_FETCH_WORD_BY_ID_FAILURE,
+            type: HOME_FETCH_WORD_FAILURE,
             data: { error: err },
           });
           reject(err);
@@ -39,72 +41,72 @@ export function fetchWordById(cardId, args = {}) {
   };
 }
 
-export function dismissFetchWordByIdError() {
+export function dismissFetchWordError() {
   return {
-    type: HOME_FETCH_WORD_BY_ID_DISMISS_ERROR,
+    type: HOME_FETCH_WORD_DISMISS_ERROR,
   };
 }
 
-export function useFetchWordById() {
+export function useFetchWord() {
   const dispatch = useDispatch();
 
-  const { fetchWordByIdPending, fetchWordByIdError } = useSelector(
+  const { fetchWordPending, fetchWordError } = useSelector(
     state => ({
-      fetchWordByIdPending: state.home.fetchWordByIdPending,
-      fetchWordByIdError: state.home.fetchWordByIdError,
+      fetchWordPending: state.home.fetchWordPending,
+      fetchWordError: state.home.fetchWordError,
     }),
     shallowEqual,
   );
 
   const boundAction = useCallback((...args) => {
-    return dispatch(fetchWordById(...args));
+    return dispatch(fetchWord(...args));
   }, [dispatch]);
 
   const boundDismissError = useCallback(() => {
-    return dispatch(dismissFetchWordByIdError());
+    return dispatch(dismissFetchWordError());
   }, [dispatch]);
 
   return {
-    fetchWordById: boundAction,
-    fetchWordByIdPending,
-    fetchWordByIdError,
-    dismissFetchWordByIdError: boundDismissError,
+    fetchWord: boundAction,
+    fetchWordPending,
+    fetchWordError,
+    dismissFetchWordError: boundDismissError,
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case HOME_FETCH_WORD_BY_ID_BEGIN:
+    case HOME_FETCH_WORD_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        fetchWordByIdPending: true,
-        fetchWordByIdError: null,
+        fetchWordPending: true,
+        fetchWordError: null,
       };
 
-    case HOME_FETCH_WORD_BY_ID_SUCCESS:
+    case HOME_FETCH_WORD_SUCCESS:
       // The request is success
       return {
         ...state,
+        fetchWordPending: false,
+        fetchWordError: null,
         word: action.data.data,
-        fetchWordByIdPending: false,
-        fetchWordByIdError: null,
         words: []
       };
 
-    case HOME_FETCH_WORD_BY_ID_FAILURE:
+    case HOME_FETCH_WORD_FAILURE:
       // The request is failed
       return {
         ...state,
-        fetchWordByIdPending: false,
-        fetchWordByIdError: action.data.error,
+        fetchWordPending: false,
+        fetchWordError: action.data.error,
       };
 
-    case HOME_FETCH_WORD_BY_ID_DISMISS_ERROR:
+    case HOME_FETCH_WORD_DISMISS_ERROR:
       // Dismiss the request failure error
       return {
         ...state,
-        fetchWordByIdError: null,
+        fetchWordError: null,
       };
 
     default:

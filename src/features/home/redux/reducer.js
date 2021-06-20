@@ -6,6 +6,7 @@ import { reducer as nextMeaningReducer } from './nextMeaning';
 import { reducer as fetchWordByIdReducer } from './fetchWordById';
 import { reducer as fetchWordsReducer } from './fetchWords';
 import { reducer as removeWordReducer } from './removeWord';
+import { reducer as fetchWordReducer } from './fetchWord';
 
 const reducers = [
   fetchCardReducer,
@@ -15,6 +16,7 @@ const reducers = [
   fetchWordByIdReducer,
   fetchWordsReducer,
   removeWordReducer,
+  fetchWordReducer,
 ];
 
 export default function reducer(state = initialState, action) {
