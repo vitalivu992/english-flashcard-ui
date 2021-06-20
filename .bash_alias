@@ -1,0 +1,2 @@
+alias docker-build='docker build --tag english-flashcard-ui:latest .'
+alias docker-build-run='docker-build; docker run english-flashcard-ui:latest'
