@@ -4,3 +4,4 @@ export { nextExample } from './nextExample';
 export { nextMeaning } from './nextMeaning';
 export { fetchWordById, dismissFetchWordByIdError } from './fetchWordById';
 export { fetchWords, dismissFetchWordsError } from './fetchWords';
+export { removeWord } from './removeWord';

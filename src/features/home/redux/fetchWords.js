@@ -6,20 +6,23 @@ import {
   HOME_FETCH_WORDS_SUCCESS,
   HOME_FETCH_WORDS_FAILURE,
   HOME_FETCH_WORDS_DISMISS_ERROR,
+  USER_SESSION_LENGTH,
+  USER_HASH,
 } from './constants';
 
-export function fetchWords(day, days, offset, limit=100, args = {}) {
+export function fetchWords(day, args = {}) {
   return (dispatch) => { // optionally you can have getState as the second argument
     dispatch({
       type: HOME_FETCH_WORDS_BEGIN,
     });
 
+    let length = sessionStorage.getItem(USER_SESSION_LENGTH);
+    let userHash = sessionStorage.getItem(USER_HASH);
     const promise = new Promise((resolve, reject) => {
       const doRequest = axios.get(process.env.REACT_APP_FLASHCARD_API + '/api/v1/words?src=flashcard'
         + (day ? '&day=' + day : '')
-        + (days ? '&days=' + days : '')
-        + (offset ? '&offset=' + offset : '')
-        + (limit ? '&limit=' + limit : ''));
+        + (length ? '&days=' + length : '')
+        + '&offset=' + (userHash ? userHash : 0));
       doRequest.then(
         (res) => {
           dispatch({

@@ -40,7 +40,7 @@ export class Flashcard extends Component {
             <Card.Header >
               <Label size='tiny' float='left' color='green' >#{flashCard.id}</Label>
               <Header as='h1' textAlign='center'>{flashCard.word}</Header>
-              <Label size='small' color='blue' ribbon='right' as='a' href={'/cards?day='+flashCard.day+'&length='+flashCard.days}>Day {flashCard.day}/{flashCard.days}</Label>
+              <Label size='small' color='blue' ribbon='right' as='a' href={'/cards?day='+flashCard.day}>Day {flashCard.day}/{flashCard.days}</Label>
             </Card.Header>
             <Card.Meta textAlign='center'>
               {flashCard.type && <Label color='grey' size='tiny'>{flashCard.type}</Label>}

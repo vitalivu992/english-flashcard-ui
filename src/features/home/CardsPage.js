@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { Segment, Button, Card, Label, Header, Icon } from 'semantic-ui-react'
 import queryString from 'query-string';
+import { USER_SESSION_LENGTH } from './redux/constants';
 
 export class CardsPage extends Component {
   static propTypes = {
@@ -14,26 +15,23 @@ export class CardsPage extends Component {
 
 
   componentDidMount() {
-    console.log('this.props.location', this.props.location);
     if (this.props.location.search) {
       const { fetchWordById, fetchWords } = this.props.actions;
       let params = queryString.parse(this.props.location.search);
-      console.log('params', params);
-      let { day, length, id } = params;
+      let { day, id } = params;
       if (id) {
         this.props.home.words = [];
         fetchWordById(id);
-      } if (day && length) {
+      } if (day) {
         this.props.home.word = null;
-        fetchWords(day, length);
+        fetchWords(day);
       }
     }
   }
 
-
   render() {
     const { words, word } = this.props.home;
-    console.log('word', words, 'word', word)
+    const { removeWord } = this.props.actions;
     return (
       <div className="home-cards-page">
         {word !== null ? (<Card fluid>
@@ -60,12 +58,12 @@ export class CardsPage extends Component {
           <Card.Content extra>
             <Button icon labelPosition='left' onClick={(event, data) => window.history.back()}>Back<Icon name='left arrow' /></Button>
           </Card.Content>
-        </Card>) : words.length > 0 ? (<Card.Group fluid>
-          {words.map((word, idx) => (<Card>
+        </Card>) : words.length > 0 ? (<Card.Group>
+          {words.map((word, idx) => (<Card key={'card-' + idx}>
             <Card.Content>
               <Card.Header >
-                <Label size='mini' color='red' circular title='Close' as='a' />
-                <Label size='mini' color='green' circular title='Detail' as='a' />
+                <Label size='mini' color='red' circular title='Remove' onClick={(event, data) => removeWord(word.word)} as='a' />
+                <Label size='mini' color='green' circular title={'View more on ' + word.word} as='a' />
                 <Header as='h2' textAlign='center'>{word.word}</Header>
               </Card.Header>
               <Card.Meta textAlign='center'>
