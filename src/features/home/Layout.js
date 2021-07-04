@@ -5,7 +5,7 @@ import { USER_ALIAS } from './redux/constants';
 
 export default function Layout({ children }) {
 
-  let userAlias = sessionStorage.getItem(USER_ALIAS);
+  let userAlias = localStorage.getItem(USER_ALIAS);
   return (
     <div>
       <Menu inverted fluid icon='labeled'>

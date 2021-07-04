@@ -30,31 +30,31 @@ export class WelcomePage extends Component {
   login = () => {
     const { userAlias_, userSessionLength_ } = this.props.home;
 
-    sessionStorage.setItem(USER_ALIAS, userAlias_)
-    sessionStorage.setItem(USER_SESSION_LENGTH, userSessionLength_)
-    sessionStorage.setItem(USER_LOGGED, true);
-    sessionStorage.setItem(USER_SINCE, Date.now());
-    sessionStorage.setItem(USER_HASH, this.hashCode(userAlias_));
+    localStorage.setItem(USER_ALIAS, userAlias_)
+    localStorage.setItem(USER_SESSION_LENGTH, userSessionLength_)
+    localStorage.setItem(USER_LOGGED, true);
+    localStorage.setItem(USER_SINCE, Date.now());
+    localStorage.setItem(USER_HASH, this.hashCode(userAlias_));
     this.props.history.push('/flashcard');
   }
 
   logout = () => {
-    sessionStorage.removeItem(USER_ALIAS);
-    sessionStorage.removeItem(USER_LOGGED);
-    sessionStorage.removeItem(USER_SINCE);
-    sessionStorage.removeItem(USER_SESSION_LENGTH);
-    sessionStorage.removeItem(USER_HASH);
+    localStorage.removeItem(USER_ALIAS);
+    localStorage.removeItem(USER_LOGGED);
+    localStorage.removeItem(USER_SINCE);
+    localStorage.removeItem(USER_SESSION_LENGTH);
+    localStorage.removeItem(USER_HASH);
 
     this.props.history.push('/');
   }
 
   render() {
 
-    const isUserLogged = sessionStorage.getItem(USER_LOGGED);
-    const userLoggedSince = sessionStorage.getItem(USER_SINCE);
-    const userAlias = sessionStorage.getItem(USER_ALIAS);
-    const userHash = sessionStorage.getItem(USER_HASH);
-    const userSessionLength = sessionStorage.getItem(USER_SESSION_LENGTH);
+    const isUserLogged = localStorage.getItem(USER_LOGGED);
+    const userLoggedSince = localStorage.getItem(USER_SINCE);
+    const userAlias = localStorage.getItem(USER_ALIAS);
+    const userHash = localStorage.getItem(USER_HASH);
+    const userSessionLength = localStorage.getItem(USER_SESSION_LENGTH);
     let { userAlias_, userSessionLength_ } = this.props.home;
     const timeOptions = [
       { key: 'w1', text: '1 week', value: 7, },
