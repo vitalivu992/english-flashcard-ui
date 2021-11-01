@@ -11,9 +11,12 @@ on:
     
 jobs:
   build:
-    name: build
+    
     runs-on: self-hosted
     steps:
+
+
+      - uses: AutoModality/action-clean@v1
     
       - uses: actions/cache@v2
         with:
