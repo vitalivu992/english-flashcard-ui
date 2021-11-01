@@ -53,8 +53,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/english-flashcard-ui:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/english-flashcard-ui:${{env.TIME_VERSION_TAG}}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
           
       - name: Docker image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
